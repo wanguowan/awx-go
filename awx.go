@@ -64,6 +64,53 @@ func ValidateParams(data map[string]interface{}, mandatoryFields []string) (notf
 	return notfound, status
 }
 
+func NewAWXWithToken(baseURL, token string) *AWX {
+	r := &Requester{Base: baseURL, Token: token}
+	if r.Client == nil {
+		r.Client = http.DefaultClient
+	}
+
+	awxClient := &Client{
+		BaseURL:   baseURL,
+		Requester: r,
+	}
+
+	return &AWX{
+		client: awxClient,
+
+		PingService: &PingService{
+			client: awxClient,
+		},
+		InventoriesService: &InventoriesService{
+			client: awxClient,
+		},
+		InventoryUpdatesService: &InventoryUpdatesService{
+			client: awxClient,
+		},
+		JobService: &JobService{
+			client: awxClient,
+		},
+		JobTemplateService: &JobTemplateService{
+			client: awxClient,
+		},
+		ProjectService: &ProjectService{
+			client: awxClient,
+		},
+		ProjectUpdatesService: &ProjectUpdatesService{
+			client: awxClient,
+		},
+		UserService: &UserService{
+			client: awxClient,
+		},
+		GroupService: &GroupService{
+			client: awxClient,
+		},
+		HostService: &HostService{
+			client: awxClient,
+		},
+	}
+}
+
 // NewAWX news an awx handler with basic auth support, you could customize the http
 // transport by passing custom client.
 func NewAWX(baseURL, userName, passwd string, client *http.Client) *AWX {

@@ -47,6 +47,7 @@ type BasicAuth struct {
 // an another rest client on this requester.
 type Requester struct {
 	Base      string
+	Token     string
 	BasicAuth *BasicAuth
 	Client    *http.Client
 }
@@ -82,6 +83,10 @@ func (r *Requester) Do(ar *APIRequest, responseStruct interface{}, options ...in
 
 	if r.BasicAuth != nil {
 		req.SetBasicAuth(r.BasicAuth.Username, r.BasicAuth.Password)
+	}
+
+	if len(r.Token) > 0 {
+		req.Header.Add("Authorization", "Bearer "+r.Token)
 	}
 
 	for k := range ar.Headers {
